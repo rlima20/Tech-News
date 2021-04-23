@@ -9,8 +9,8 @@ import br.com.alura.technews.model.Noticia
 import br.com.alura.technews.retrofit.webclient.NoticiaWebClient
 
 class NoticiaRepository(
-    private val dao: NoticiaDAO,
-    private val webclient: NoticiaWebClient = NoticiaWebClient()
+    private val dao: NoticiaDAO
+    //private val webclient: NoticiaWebClient = NoticiaWebClient()
 ) {
 
     private val mediador = MediatorLiveData<Resource<List<Noticia>?>>()
@@ -20,9 +20,8 @@ class NoticiaRepository(
         mediador.addSource(buscaInterno()) { noticiasEncontradas ->
             mediador.value = Resource(dado = noticiasEncontradas)
         }
-
-        val falhasDaWebApiLiveData = MutableLiveData<Resource<List<Noticia>?>>()
-        mediador.addSource(falhasDaWebApiLiveData) {resourceDeFalha ->
+//val falhasDaWebApiLiveData = MutableLiveData<Resource<List<Noticia>?>>()
+/*        mediador.addSource(falhasDaWebApiLiveData) {resourceDeFalha ->
             val resourceAtual = mediador.value
             val resourceNovo: Resource<List<Noticia>?> = if(resourceAtual != null){
                 Resource(dado = resourceAtual.dado, erro = resourceDeFalha.erro)
@@ -30,13 +29,13 @@ class NoticiaRepository(
                 resourceDeFalha
             }
             mediador.value = resourceNovo
-        }
-
+        }*/
+/*
         buscaNaApi(
             quandoFalha = { erro ->
                 falhasDaWebApiLiveData.value = Resource(dado = null, erro = erro)
             })
-
+*/
         return mediador
     }
 
@@ -44,10 +43,8 @@ class NoticiaRepository(
         noticia: Noticia
     ): LiveData<Resource<Void?>> {
         val liveData = MutableLiveData<Resource<Void?>>()
-        salvaNaApi(noticia, quandoSucesso = {
-            liveData.value = Resource(null)
-        }, quandoFalha = { erro ->
-            liveData.value = Resource(dado = null, erro = erro)
+        salvaInterno(noticia,
+            quandoSucesso = {liveData.value = Resource(null)
         })
         return liveData
     }
@@ -56,10 +53,8 @@ class NoticiaRepository(
         noticia: Noticia
     ): LiveData<Resource<Void?>> {
         val liveData = MutableLiveData<Resource<Void?>>()
-        removeNaApi(noticia, quandoSucesso = {
+        removeInterno(noticia, quandoSucesso = {
             liveData.value = Resource(null)
-        }, quandoFalha = { erro ->
-            liveData.value = Resource(null, erro)
         })
         return liveData
     }
@@ -68,10 +63,8 @@ class NoticiaRepository(
         noticia: Noticia
     ): LiveData<Resource<Void?>> {
         val liveData = MutableLiveData<Resource<Void?>>()
-        editaNaApi(noticia, quandoSucesso = {
+        salvaInterno(noticia, quandoSucesso = {
             liveData.value = Resource(null)
-        }, quandoFalha = { erro ->
-            liveData.value = Resource(dado = null, erro = erro)
         })
         return liveData
     }
@@ -82,35 +75,8 @@ class NoticiaRepository(
         return dao.buscaPorId(noticiaId)
     }
 
-    private fun buscaNaApi(
-        quandoFalha: (erro: String?) -> Unit
-    ) {
-        webclient.buscaTodas(
-            quandoSucesso = { noticiasNovas ->
-                noticiasNovas?.let {
-                    salvaInterno(noticiasNovas)
-                }
-            }, quandoFalha = quandoFalha
-        )
-    }
-
     private fun buscaInterno() : LiveData<List<Noticia>> {
         return dao.buscaTodos()
-    }
-
-    private fun salvaNaApi(
-        noticia: Noticia,
-        quandoSucesso: () -> Unit,
-        quandoFalha: (erro: String?) -> Unit
-    ) {
-        webclient.salva(
-            noticia,
-            quandoSucesso = {
-                it?.let { noticiaSalva ->
-                    salvaInterno(noticiaSalva, quandoSucesso)
-                }
-            }, quandoFalha = quandoFalha
-        )
     }
 
     private fun salvaInterno(
@@ -134,20 +100,6 @@ class NoticiaRepository(
         }).execute()
     }
 
-    private fun removeNaApi(
-        noticia: Noticia,
-        quandoSucesso: () -> Unit,
-        quandoFalha: (erro: String?) -> Unit
-    ) {
-        webclient.remove(
-            noticia.id,
-            quandoSucesso = {
-                removeInterno(noticia, quandoSucesso)
-            },
-            quandoFalha = quandoFalha
-        )
-    }
-
     private fun removeInterno(
         noticia: Noticia,
         quandoSucesso: () -> Unit
@@ -158,20 +110,4 @@ class NoticiaRepository(
             quandoSucesso()
         }).execute()
     }
-
-    private fun editaNaApi(
-        noticia: Noticia,
-        quandoSucesso: () -> Unit,
-        quandoFalha: (erro: String?) -> Unit
-    ) {
-        webclient.edita(
-            noticia.id, noticia,
-            quandoSucesso = { noticiaEditada ->
-                noticiaEditada?.let {
-                    salvaInterno(noticiaEditada, quandoSucesso)
-                }
-            }, quandoFalha = quandoFalha
-        )
-    }
-
 }
