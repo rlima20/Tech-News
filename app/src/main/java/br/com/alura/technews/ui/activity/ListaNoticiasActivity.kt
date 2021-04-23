@@ -60,7 +60,10 @@ class ListaNoticiasActivity : AppCompatActivity() {
 
     private fun buscaNoticias() {
         viewModel.buscaTodos().observe(this, Observer { resource ->
-            resource.dado?.let { adapter.atualiza(it) }
+            resource.dado?.let {
+                adapter.atualiza(it)
+            }
+
             resource.erro?.let {
                 mostraErro(MENSAGEM_FALHA_CARREGAR_NOTICIAS)
             }
@@ -77,5 +80,9 @@ class ListaNoticiasActivity : AppCompatActivity() {
         intent.putExtra(NOTICIA_ID_CHAVE, it.id)
         startActivity(intent)
     }
+
+    /**
+     * Commit raphael - primeira alteração
+     */
 
 }

@@ -6,11 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import br.com.alura.technews.asynctask.BaseAsyncTask
 import br.com.alura.technews.database.dao.NoticiaDAO
 import br.com.alura.technews.model.Noticia
-import br.com.alura.technews.retrofit.webclient.NoticiaWebClient
 
 class NoticiaRepository(
     private val dao: NoticiaDAO
-    //private val webclient: NoticiaWebClient = NoticiaWebClient()
 ) {
 
     private val mediador = MediatorLiveData<Resource<List<Noticia>?>>()
@@ -20,22 +18,6 @@ class NoticiaRepository(
         mediador.addSource(buscaInterno()) { noticiasEncontradas ->
             mediador.value = Resource(dado = noticiasEncontradas)
         }
-//val falhasDaWebApiLiveData = MutableLiveData<Resource<List<Noticia>?>>()
-/*        mediador.addSource(falhasDaWebApiLiveData) {resourceDeFalha ->
-            val resourceAtual = mediador.value
-            val resourceNovo: Resource<List<Noticia>?> = if(resourceAtual != null){
-                Resource(dado = resourceAtual.dado, erro = resourceDeFalha.erro)
-            } else {
-                resourceDeFalha
-            }
-            mediador.value = resourceNovo
-        }*/
-/*
-        buscaNaApi(
-            quandoFalha = { erro ->
-                falhasDaWebApiLiveData.value = Resource(dado = null, erro = erro)
-            })
-*/
         return mediador
     }
 
