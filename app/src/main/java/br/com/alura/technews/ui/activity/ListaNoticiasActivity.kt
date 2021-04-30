@@ -83,6 +83,7 @@ class ListaNoticiasActivity : AppCompatActivity() {
 
     /**
      * Commit raphael - primeira alteração
+     * Commit2
      */
 
 }
