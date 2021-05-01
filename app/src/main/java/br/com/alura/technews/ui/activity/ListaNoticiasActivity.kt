@@ -81,4 +81,12 @@ class ListaNoticiasActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * Commit raphael - primeira alteração
+     * Commit2
+     * Commit3
+     * Commit3
+     * Commit4
+     */
+
 }
