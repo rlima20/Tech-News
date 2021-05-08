@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import br.com.alura.technews.R
-import br.com.alura.technews.database.AppDatabase
 import br.com.alura.technews.model.Noticia
 import br.com.alura.technews.repository.NoticiaRepository
 import br.com.alura.technews.ui.activity.extensions.mostraErro
@@ -23,12 +22,20 @@ private const val MENSAGEM_FALHA_CARREGAR_NOTICIAS = "Não foi possível carrega
 
 class ListaNoticiasActivity : AppCompatActivity() {
 
-    private val database by inject<AppDatabase>()
+    /**
+     * Com essa abordagem de injetar o repository eu não preciso mais fazer a instância do
+     * banco de dados, que já está sendo injetada dentro do NoticiaRepository que é injetado pelo koin.
+     *
+     * Ele vai injetar o NoticiaRepository e dentro dele, ele já sabe que precisa do dao. E internamente
+     * o koin já sabe como criar o dao.
+     */
+    private val repository: NoticiaRepository by inject()
+
     private val adapter by lazy {
         ListaNoticiasAdapter(context = this)
     }
+
     private val viewModel by lazy {
-        val repository = NoticiaRepository(database.noticiaDAO)
         val factory = ListaNoticiasViewModelFactory(repository)
         val provedor = ViewModelProviders.of(this, factory)
         provedor.get(ListaNoticiasViewModel::class.java)
