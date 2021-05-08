@@ -16,6 +16,7 @@ import br.com.alura.technews.ui.viewmodel.ListaNoticiasViewModel
 import br.com.alura.technews.ui.viewmodel.factory.ListaNoticiasViewModelFactory
 import kotlinx.android.synthetic.main.activity_lista_noticias.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 private const val TITULO_APPBAR = "Notícias"
 private const val MENSAGEM_FALHA_CARREGAR_NOTICIAS = "Não foi possível carregar as novas notícias"
@@ -28,18 +29,17 @@ class ListaNoticiasActivity : AppCompatActivity() {
      *
      * Ele vai injetar o NoticiaRepository e dentro dele, ele já sabe que precisa do dao. E internamente
      * o koin já sabe como criar o dao.
+     *
+     * O mesmo acontece com o viewmodel. O koin já sabe como fazer a injeção de dependência. Logo eu não prciso mais
+     * dessa linha de codigo:     private val repository: NoticiaRepository by inject()
+     *
      */
-    private val repository: NoticiaRepository by inject()
 
     private val adapter by lazy {
         ListaNoticiasAdapter(context = this)
     }
 
-    private val viewModel by lazy {
-        val factory = ListaNoticiasViewModelFactory(repository)
-        val provedor = ViewModelProviders.of(this, factory)
-        provedor.get(ListaNoticiasViewModel::class.java)
-    }
+    private val viewModel:ListaNoticiasViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

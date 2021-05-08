@@ -4,6 +4,10 @@ import androidx.room.Room
 import br.com.alura.technews.database.AppDatabase
 import br.com.alura.technews.database.dao.NoticiaDAO
 import br.com.alura.technews.repository.NoticiaRepository
+import br.com.alura.technews.ui.viewmodel.FormularioNoticiaViewModel
+import br.com.alura.technews.ui.viewmodel.ListaNoticiasViewModel
+import br.com.alura.technews.ui.viewmodel.VisualizaNoticiaViewModel
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 /**
@@ -28,5 +32,17 @@ val appModules = module{
 
     single<NoticiaRepository>{
         NoticiaRepository(get())
+    }
+
+    viewModel<ListaNoticiasViewModel> {
+        ListaNoticiasViewModel(get())
+    }
+
+    viewModel<VisualizaNoticiaViewModel> { (id: Long) ->
+        VisualizaNoticiaViewModel(id, get())
+    }
+
+    viewModel<FormularioNoticiaViewModel> {
+        FormularioNoticiaViewModel(get())
     }
 }
