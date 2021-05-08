@@ -16,6 +16,8 @@ import br.com.alura.technews.ui.viewmodel.VisualizaNoticiaViewModel
 import br.com.alura.technews.ui.viewmodel.factory.VisualizaNoticiaViewModelFactory
 import kotlinx.android.synthetic.main.activity_visualiza_noticia.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 private const val NOTICIA_NAO_ENCONTRADA = "Notícia não encontrada"
 private const val TITULO_APPBAR = "Notícia"
@@ -23,13 +25,22 @@ private const val MENSAGEM_FALHA_REMOCAO = "Não foi possível remover notícia"
 
 class VisualizaNoticiaActivity : AppCompatActivity() {
 
-    private val repository: NoticiaRepository by inject()
+    /**
+     * Aqui vou fazer a injeção de dependência através da property val viewModel que é do tipo
+     * VisualizaNoticiaViewModel. Faço a injeção através do by viewModel. Como essa injeção precisa de um arumento
+     * eu preciso abrir as chaves e dentro das chaves colocar o parametersOf e o argumento dentro.
+     *
+     * Com essa abordagem eu também não preciso mais usar a injeção de dependência do repository pois internamente
+     * o Injetor do VisualizaViewModel já sabe como fazer isso.
+     * private val repository: NoticiaRepository by inject()
+     */
+
     private val noticiaId: Long by lazy {
         intent.getLongExtra(NOTICIA_ID_CHAVE, 0)
     }
-    private val viewModel by lazy {
-        val factory = VisualizaNoticiaViewModelFactory(noticiaId, repository)
-        ViewModelProviders.of(this, factory).get(VisualizaNoticiaViewModel::class.java)
+
+    private val viewModel:VisualizaNoticiaViewModel by viewModel(){
+        parametersOf(noticiaId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
