@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.alura.technews.R
+import br.com.alura.technews.model.Noticia
 import br.com.alura.technews.ui.activity.ListaNoticiasActivity
 import br.com.alura.technews.ui.fragment.extensions.mostraErro
 import br.com.alura.technews.ui.recyclerview.adapter.ListaNoticiasAdapter
@@ -107,5 +108,21 @@ class ListaNoticiasFragment : Fragment() {
                 mostraErro(MENSAGEM_FALHA_CARREGAR_NOTICIAS)
             }
         })
+    }
+
+    /**
+     * Implementação de uma inner interface.
+     * Aqui dentro eu coloco os comportamentos que espero
+     *         fun quandoNoticiaSelecionada(noticia: Noticia) - Envio uma notícia para poder também
+     *         dar acesso para quem chamou esse listener.
+     *
+     *         fun qundoFabNoticiaSalvaNoticiaClicado()
+     * Eu crio essa interface e ao invés de estar lidando diretamente com uma activity eu posso estar
+     * lidando diretamente com a interface.
+     *
+     */
+    interface ListaNoticiasListener{
+        fun quandoNoticiaSelecionada(noticia: Noticia)
+        fun qundoFabNoticiaSalvaNoticiaClicado()
     }
 }
