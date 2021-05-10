@@ -38,6 +38,19 @@ class ListaNoticiasFragment : Fragment() {
 
     private val viewModel: ListaNoticiasViewModel by viewModel()
 
+    /**
+     * É um mecanismo de inicialização em Fragments
+     * Aqui eu faço as inicializações que fazem parte da view direta.
+     * Então, no onCreate não criamos a view, fazemos a inicialização.
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        buscaNoticias()
+    }
+
+    /**
+     * Cria uma view. Temos o mesmo comportamento de inflar uma view
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,17 +59,14 @@ class ListaNoticiasFragment : Fragment() {
         return inflater.inflate(R.layout.lista_noticia, container, false)
     }
 
+    /**
+     * É no onViewCreated que fazemos o bind de view. Comportamento de vínculo de view.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         configuraRecyclerView()
         configuraFabAdicionaNoticia()
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        buscaNoticias()
-    }
-
 
     private fun configuraFabAdicionaNoticia() {
         lista_noticias_fab_salva_noticia.setOnClickListener {
