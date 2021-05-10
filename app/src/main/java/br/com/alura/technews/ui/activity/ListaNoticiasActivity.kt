@@ -28,12 +28,12 @@ class ListaNoticiasActivity : AppCompatActivity() {
         title = TITULO_APPBAR
     }
 
-    private fun abreFormularioModoCriacao() {
+    fun abreFormularioModoCriacao() {
         val intent = Intent(this, FormularioNoticiaActivity::class.java)
         startActivity(intent)
     }
 
-    private fun abreVisualizadorNoticia(it: Noticia) {
+    fun abreVisualizadorNoticia(it: Noticia) {
         val intent = Intent(this, VisualizaNoticiaActivity::class.java)
         intent.putExtra(NOTICIA_ID_CHAVE, it.id)
         startActivity(intent)
