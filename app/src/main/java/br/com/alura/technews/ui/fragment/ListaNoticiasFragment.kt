@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.alura.technews.R
+import br.com.alura.technews.ui.activity.ListaNoticiasActivity
 import br.com.alura.technews.ui.fragment.extensions.mostraErro
 import br.com.alura.technews.ui.recyclerview.adapter.ListaNoticiasAdapter
 import br.com.alura.technews.ui.viewmodel.ListaNoticiasViewModel
@@ -37,6 +38,7 @@ class ListaNoticiasFragment : Fragment() {
     }
 
     private val viewModel: ListaNoticiasViewModel by viewModel()
+    private lateinit var listaNoticiasActivity: ListaNoticiasActivity
 
     /**
      * É um mecanismo de inicialização em Fragments
@@ -46,6 +48,7 @@ class ListaNoticiasFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         buscaNoticias()
+        listaNoticiasActivity = activity as ListaNoticiasActivity
     }
 
     /**
@@ -68,9 +71,13 @@ class ListaNoticiasFragment : Fragment() {
         configuraFabAdicionaNoticia()
     }
 
+    /**
+     * Uso a referência da listaNoticiasActivity chamando o abreFormulárioModoCriacao()
+     * quando clico em uma notícia.
+     */
     private fun configuraFabAdicionaNoticia() {
         lista_noticias_fab_salva_noticia.setOnClickListener {
-            //abreFormularioModoCriacao()
+            listaNoticiasActivity.abreFormularioModoCriacao()
         }
     }
 
@@ -81,8 +88,13 @@ class ListaNoticiasFragment : Fragment() {
         configuraAdapter()
     }
 
+    /**
+     * Já no adapter qundo eu quiser colocar um comportamento no listener dele que é quando um item for clicado,
+     * utilizamos a referência da listaNoticiasActivity que nada mais é também ue uma função que vai receber
+     * uma notícia. E é compatível com a implementação que foi via method reference.
+     */
     private fun configuraAdapter() {
-        //adapter.quandoItemClicado = this::abreVisualizadorNoticia
+        adapter.quandoItemClicado = listaNoticiasActivity::abreVisualizadorNoticia
     }
 
     private fun buscaNoticias() {
