@@ -39,7 +39,13 @@ class ListaNoticiasFragment : Fragment() {
     }
 
     private val viewModel: ListaNoticiasViewModel by viewModel()
-    private lateinit var listaNoticiasActivity: ListaNoticiasActivity
+
+    /**
+     * Precismos fazer a inicialização - Faço isso com uma implementação vazia que não dvolve nada e na execução
+     * não acontece nada. -> Unit = {}
+     */
+    var quandoFabNoticiaSalvaNoticiaClicado: () -> Unit = {}//Uma função que não recebe nada e tambem não devolve nada
+    var quandoNoticiaSelecionada: (noticia: Noticia) -> Unit = {} //É uma função que pode receber uma notícia e não devolve nada
 
     /**
      * É um mecanismo de inicialização em Fragments
@@ -49,7 +55,6 @@ class ListaNoticiasFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         buscaNoticias()
-        listaNoticiasActivity = activity as ListaNoticiasActivity
     }
 
     /**
@@ -78,7 +83,7 @@ class ListaNoticiasFragment : Fragment() {
      */
     private fun configuraFabAdicionaNoticia() {
         lista_noticias_fab_salva_noticia.setOnClickListener {
-            listaNoticiasActivity.abreFormularioModoCriacao()
+            quandoFabNoticiaSalvaNoticiaClicado()
         }
     }
 
@@ -95,7 +100,7 @@ class ListaNoticiasFragment : Fragment() {
      * uma notícia. E é compatível com a implementação que foi via method reference.
      */
     private fun configuraAdapter() {
-        adapter.quandoItemClicado = listaNoticiasActivity::abreVisualizadorNoticia
+        adapter.quandoItemClicado = quandoNoticiaSelecionada
     }
 
     private fun buscaNoticias() {
@@ -120,9 +125,11 @@ class ListaNoticiasFragment : Fragment() {
      * Eu crio essa interface e ao invés de estar lidando diretamente com uma activity eu posso estar
      * lidando diretamente com a interface.
      *
+     *     interface ListaNoticiasListener{
+            fun quandoNoticiaSelecionada(noticia: Noticia)
+            fun quandoFabNoticiaSalvaNoticiaClicado()
+            }
+     *
      */
-    interface ListaNoticiasListener{
-        fun quandoNoticiaSelecionada(noticia: Noticia)
-        fun qundoFabNoticiaSalvaNoticiaClicado()
-    }
+
 }
