@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import br.com.alura.technews.R
 import br.com.alura.technews.model.Noticia
 import br.com.alura.technews.ui.fragment.ListaNoticiasFragment
+import br.com.alura.technews.ui.fragment.VisualizaNoticiaFragment
 
 /**
  * Identifica se a activity tem algum fragment que foi anexado.
@@ -23,12 +24,17 @@ import br.com.alura.technews.ui.fragment.ListaNoticiasFragment
 
 private const val TITULO_APPBAR = "Notícias"
 
-class ListaNoticiasActivity : AppCompatActivity(){
+class NoticiasActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_lista_noticias)
+        setContentView(R.layout.activity_noticias)
         title = TITULO_APPBAR
+
+        var transacao = supportFragmentManager.beginTransaction()
+        transacao.add(R.id.activity_noticias_container, ListaNoticiasFragment())
+        transacao.commit()
+
     }
 
     override fun onAttachFragment(fragment: Fragment?) {
@@ -41,6 +47,11 @@ class ListaNoticiasActivity : AppCompatActivity(){
                 abreFormularioModoCriacao()
             }
         }
+
+        if(fragment is VisualizaNoticiaFragment){
+            fragment.quandoFinalizaTela = { finish()}
+            fragment.quandoSelecionaMenuEdicao = { noticiaSelecionada ->  abreFormularioEdicao(noticiaSelecionada)}
+        }
     }
 
     private fun abreFormularioModoCriacao() {
@@ -48,9 +59,23 @@ class ListaNoticiasActivity : AppCompatActivity(){
         startActivity(intent)
     }
 
-    private fun abreVisualizadorNoticia(it: Noticia) {
-        val intent = Intent(this, VisualizaNoticiaActivity::class.java)
-        intent.putExtra(NOTICIA_ID_CHAVE, it.id)
+    private fun abreVisualizadorNoticia(noticia: Noticia) {
+        criaFragmentProgramaticamente(noticia)
+    }
+
+    private fun criaFragmentProgramaticamente(noticia: Noticia) {
+        val transacao = supportFragmentManager.beginTransaction()
+        val fragment = VisualizaNoticiaFragment()
+        val dados = Bundle()
+        dados.putLong(NOTICIA_ID_CHAVE, noticia.id)
+        fragment.arguments = dados
+        transacao.replace(R.id.activity_noticias_container, fragment)
+        transacao.commit()
+    }
+
+    private fun abreFormularioEdicao(noticia: Noticia) {
+        val intent = Intent(this, FormularioNoticiaActivity::class.java)
+        intent.putExtra(NOTICIA_ID_CHAVE, noticia.id)
         startActivity(intent)
     }
 }
