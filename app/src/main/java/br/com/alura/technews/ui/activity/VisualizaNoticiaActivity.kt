@@ -67,14 +67,6 @@ class VisualizaNoticiaActivity : AppCompatActivity() {
     override fun onAttachFragment(fragment: Fragment?) {
         super.onAttachFragment(fragment)
         if(fragment is VisualizaNoticiaFragment){
-            fragment.quandoFinalizaTela = { finish()}
-            fragment.quandoSelecionaMenuEdicao = { abreFormularioEdicao()}
         }
-    }
-
-    private fun abreFormularioEdicao() {
-        val intent = Intent(this, FormularioNoticiaActivity::class.java)
-        intent.putExtra(NOTICIA_ID_CHAVE, noticiaId)
-        startActivity(intent)
     }
 }

@@ -39,7 +39,7 @@ class VisualizaNoticiaFragment: Fragment() {
         parametersOf(noticiaId)
     }
 
-    var quandoSelecionaMenuEdicao: () -> Unit = {}
+    var quandoSelecionaMenuEdicao: (noticia: Noticia) -> Unit = {}
     var quandoFinalizaTela: () -> Unit = {}
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -49,7 +49,9 @@ class VisualizaNoticiaFragment: Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.visualiza_noticia_menu_edita -> quandoSelecionaMenuEdicao()
+            R.id.visualiza_noticia_menu_edita -> {
+                viewModel.noticiaEncontrada.value?.let(quandoSelecionaMenuEdicao)
+            }
             R.id.visualiza_noticia_menu_remove -> remove()
         }
         return super.onOptionsItemSelected(item)
