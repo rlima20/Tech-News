@@ -34,7 +34,7 @@ class ListaNoticiasFragment : Fragment() {
     private val adapter by lazy {
         context?.let {
             ListaNoticiasAdapter(context = it)
-        } ?: throw IllegalArgumentException("COntexto Inválido")
+        } ?: throw IllegalArgumentException("Contexto Inválido")
     }
 
     private val viewModel: ListaNoticiasViewModel by viewModel()

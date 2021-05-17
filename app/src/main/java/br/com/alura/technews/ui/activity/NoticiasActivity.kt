@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import br.com.alura.technews.R
 import br.com.alura.technews.model.Noticia
+import br.com.alura.technews.ui.activity.extensions.transacaoFragment
 import br.com.alura.technews.ui.fragment.ListaNoticiasFragment
 import br.com.alura.technews.ui.fragment.VisualizaNoticiaFragment
 
@@ -31,10 +32,9 @@ class NoticiasActivity : AppCompatActivity(){
         setContentView(R.layout.activity_noticias)
         title = TITULO_APPBAR
 
-        var transacao = supportFragmentManager.beginTransaction()
-        transacao.add(R.id.activity_noticias_container, ListaNoticiasFragment())
-        transacao.commit()
-
+        transacaoFragment {
+            add(R.id.activity_noticias_container, ListaNoticiasFragment())
+        }
     }
 
     /**
@@ -75,18 +75,19 @@ class NoticiasActivity : AppCompatActivity(){
         startActivity(intent)
     }
 
+    /**
+     * Reutilizando a função transacaoFragment
+     */
     private fun abreVisualizadorNoticia(noticia: Noticia) {
-        criaFragmentProgramaticamente(noticia)
-    }
 
-    private fun criaFragmentProgramaticamente(noticia: Noticia) {
-        val transacao = supportFragmentManager.beginTransaction()
         val fragment = VisualizaNoticiaFragment()
         val dados = Bundle()
         dados.putLong(NOTICIA_ID_CHAVE, noticia.id)
         fragment.arguments = dados
-        transacao.replace(R.id.activity_noticias_container, fragment)
-        transacao.commit()
+
+        transacaoFragment {
+            replace(R.id.activity_noticias_container, fragment)
+        }
     }
 
     private fun abreFormularioEdicao(noticia: Noticia) {
@@ -171,3 +172,18 @@ if(fragment is VisualizaNoticiaFragment){
 }
 
  */
+
+/**
+ * Uma técnica bacana para evitar essa verbosidade:
+ * DSL - Domain Specific Language. Vamos criar uma função que vai ter a responsabilidade
+ * de criar uma linguagem que cria transação e no final das contas ela faz o commit.
+
+private fun criaFragmentProgramaticamente(noticia: Noticia) {
+val transacao = supportFragmentManager.beginTransaction()
+val fragment = VisualizaNoticiaFragment()
+val dados = Bundle()
+dados.putLong(NOTICIA_ID_CHAVE, noticia.id)
+fragment.arguments = dados
+transacao.replace(R.id.activity_noticias_container, fragment)
+transacao.commit()
+}*/
