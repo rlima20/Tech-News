@@ -77,6 +77,7 @@ class ListaNoticiasFragment : Fragment() {
         configuraRecyclerView()
         configuraFabAdicionaNoticia()
         activity?.title = TITULO_APPBAR
+
     }
 
     /**
