@@ -23,15 +23,18 @@ import br.com.alura.technews.ui.fragment.VisualizaNoticiaFragment
  *
  */
 
-private const val TITULO_APPBAR = "Notícias"
-
 class NoticiasActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_noticias)
-        title = TITULO_APPBAR
 
+        if(savedInstanceState == null){
+            abreListaNoticias()
+        }
+    }
+
+    private fun abreListaNoticias() {
         transacaoFragment {
             add(R.id.activity_noticias_container, ListaNoticiasFragment())
         }
@@ -86,6 +89,7 @@ class NoticiasActivity : AppCompatActivity(){
         fragment.arguments = dados
 
         transacaoFragment {
+            addToBackStack(null)
             replace(R.id.activity_noticias_container, fragment)
         }
     }
