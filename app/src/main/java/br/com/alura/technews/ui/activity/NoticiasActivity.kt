@@ -29,10 +29,10 @@ class NoticiasActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_noticias)
 
-        if(savedInstanceState == null){
-            abreListaNoticias()
-        }
-    }
+        var transacao = supportFragmentManager.beginTransaction()
+        transacao.add(R.id.activity_noticias_container_primario, ListaNoticiasFragment())
+        transacao.commit()
+
 
     private fun abreListaNoticias() {
         transacaoFragment {
@@ -87,11 +87,9 @@ class NoticiasActivity : AppCompatActivity(){
         val dados = Bundle()
         dados.putLong(NOTICIA_ID_CHAVE, noticia.id)
         fragment.arguments = dados
+        transacao.replace(R.id.activity_noticias_container_secundario, fragment)
+        transacao.commit()
 
-        transacaoFragment {
-            addToBackStack(null)
-            replace(R.id.activity_noticias_container, fragment)
-        }
     }
 
     private fun abreFormularioEdicao(noticia: Noticia) {
