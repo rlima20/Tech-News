@@ -13,11 +13,18 @@ import org.koin.dsl.module
 /**
  * O que é dependência?
  * Qualquer objeto que uma classe precisa
+ *
+ * A partir da função module eu consigo indicar todas as dependências que eu quero que o koin
+ * saiba criar e consiga injetar.
  */
 
 private const val NOME_BANCO_DE_DADOS = "news.db"
 
 val appModules = module{
+
+    /**
+     * Essa é a injeção de dependência de uma instância do AppDatabase.
+     */
     single<AppDatabase>{
         Room.databaseBuilder(
             get(),

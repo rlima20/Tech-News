@@ -32,7 +32,7 @@ class NoticiasActivity : AppCompatActivity(){
         title = TITULO_APPBAR
 
         var transacao = supportFragmentManager.beginTransaction()
-        transacao.add(R.id.activity_noticias_container, ListaNoticiasFragment())
+        transacao.add(R.id.activity_noticias_container_primario, ListaNoticiasFragment())
         transacao.commit()
 
     }
@@ -69,7 +69,7 @@ class NoticiasActivity : AppCompatActivity(){
         val dados = Bundle()
         dados.putLong(NOTICIA_ID_CHAVE, noticia.id)
         fragment.arguments = dados
-        transacao.replace(R.id.activity_noticias_container, fragment)
+        transacao.replace(R.id.activity_noticias_container_secundario, fragment)
         transacao.commit()
     }
 
